@@ -10,7 +10,6 @@ Flujo automatizado de n8n que analiza datasets (CSV o Google Sheets) utilizando 
 ├── Dataset Agent.json          # Flujo de n8n para importar
 ├── Informe.pdf                 # Informe completo del proyecto
 ├── correo_de_ejemplo.html      # Ejemplo del correo HTML generado
-├── README.pdf                  # Este archivo
 │
 └── Google Drive/
     ├── Datasets de ejemplo/    # 📂 Carpeta INPUT - CSV a analizar
