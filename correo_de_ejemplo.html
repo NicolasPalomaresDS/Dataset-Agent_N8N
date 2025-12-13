@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Dataset</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif">
+    
+    <!-- Container principal -->
+    <div style="max-width:700px;margin:40px auto;background-color:#ffffff;border-radius:12px;overflow:hidden">
+        
+        <!-- Header con gradiente -->
+        <div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px 30px;text-align:center">
+            <h1 style="margin:0;color:#ffffff;font-size:32px;font-weight:700">
+                📊 Análisis de Dataset
+            </h1>
+        </div>
+        
+        <!-- Información general -->
+        <div style="background:linear-gradient(to right,#eff6ff,#f0f9ff);padding:25px 30px;border-left:5px solid #3b82f6">
+            <h2 style="margin:0 0 20px 0;color:#1e40af;font-size:20px;font-weight:600">
+                📋 Información General
+            </h2>
+            <table style="width:100%;border-collapse:collapse">
+                <tr>
+                    <td style="padding:8px 0;color:#6b7280;font-weight:600;width:40%">📄 Archivo:</td>
+                    <td style="padding:8px 0;color:#1f2937">cleaned_weather.csv</td>
+                </tr>
+                <tr>
+                    <td style="padding:8px 0;color:#6b7280;font-weight:600">📊 Total de filas:</td>
+                    <td style="padding:8px 0;color:#1f2937">52,696</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Contenido del análisis -->
+        <div style="padding:35px 30px">
+            <div style="background:#f9fafb;padding:25px;border-radius:8px;border-left:4px solid #667eea">
+                <p style="margin:0 0 15px 0;line-height:1.7;color:#374151">
+                    Informe de Análisis Exploratorio y Recomendaciones para el Dataset
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <h4 style="color:#4b5563;font-size:16px;margin-top:25px;margin-bottom:12px;font-weight:600">a) Descripción de Variables</h4>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">date: Variable tipo fecha (datetime), representa el registro temporal de las observaciones. Está en un rango desde el inicio hasta el fin del muestreo. Es fundamental para análisis temporales.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">p: Numérica continua, representa presión atmosférica. Rango amplio, probablemente en unidades atmosféricas estándar (hPa). Distribución con ligera asimetría.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">T: Numérica continua, temperatura ambiente. Valores en rango típico ambiental, con distribución unimodal.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Tpot: Numérica continua, temperatura potencial (temperatura ajustada a una presión estándar). Similar a T, se usa para comparaciones termodinámicas.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Tdew: Numérica continua, temperatura de punto de rocío. Relacionada con humedad, rango coherente con valores esperados.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">rh: Numérica continua, humedad relativa en porcentaje (%). Rango 0-100%, con tendencia central alrededor de la media.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">VPmax, VPact, VPdef: Numéricas continuas relacionadas con presión de vapor. VPmax es la presión de vapor máxima, VPact la actual y VPdef el déficit de presión de vapor. Rangos adecuados, distribuciones informativas sobre condiciones de humedad.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">sh: Numérica continua, humedad específica. Valores positivos con baja variabilidad.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">H2OC: Numérica continua, concentración de vapor de agua o similar. Distribución con algunos valores elevados indicando posibles picos.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">rho: Numérica continua, densidad del aire. Valores ajustados a condiciones ambientales.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">wv: Numérica continua, velocidad del viento. Presenta valores con variabilidad moderada.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">max. wv: Numérica continua, velocidad máxima del viento, mayor rango que wv.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">wd: Numérica discreta/categórica ordinal, dirección del viento dado en grados 0-360.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">rain: Numérica continua, cantidad de lluvia registrada. Predomina muchos ceros y algunos picos.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">raining: Variable categórica binaria, indica si está lloviendo (sí/no).</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">SWDR: Numérica continua, radiación solar directa, valores desde cero hasta picos altos.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">PAR: Numérica continua, radiación fotosintéticamente activa. Distribución sesgada positiva.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">max. PAR: Numérica continua, máximo PAR registrado, similar distribución a PAR pero con valores mayores.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Tlog: Numérica continua, temperatura registrada en un sensor log, con valores similares a T.</li>
+                    </ul>
+                </p>
+
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <h4 style="color:#4b5563;font-size:16px;margin-top:25px;margin-bottom:12px;font-weight:600">b) Análisis Estadístico</h4>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Medias y medianas de variables de temperatura y humedad están dentro de rangos esperados con desviaciones estándar moderadas, indicando estabilidad de las condiciones ambientales en el período.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Presión (p) muestra baja desviación relativa, estabilidad atmosférica.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Velocidad del viento (wv) y máximos presentan mayor variabilidad, reflejando fluctuaciones naturales.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Variables de humedad (rh, VPact) tienen distribuciones amplias, con valores mínimos cercano a 0 y máximos cercanos a 100 en humedad relativa.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Precipitación (rain) presenta muchos valores en cero (eventos secos frecuentes) y algunos picos altos, mostrando distribución sesgada.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Radiación solar (SWDR, PAR) altamente sesgadas, con picos en horas diurnas.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Variable raining tiene clases balanceadas moderadamente, con predominancia en "no lloviendo".</li>
+                    </ul>
+                </p>
+
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <h4 style="color:#4b5563;font-size:16px;margin-top:25px;margin-bottom:12px;font-weight:600">c) Calidad de Datos</h4>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">No se detectaron valores faltantes significativos en ninguna columna, porcentaje cercano a 0%.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Outliers detectados principalmente en variables rain, max. wv, y radiación (SWDR, PAR), asociados a eventos ambientales extremos.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">No se identificaron filas duplicadas.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Nombres de variables presentan pequeños problemas de formato: variables con espacios (max. wv, max. PAR) deberían corregirse a max_wv, max_PAR para facilitar el manejo.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">No se observaron inconsistencias en etiquetas o tipos de datos.</li>
+                    </ul>
+                </p>
+
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <h4 style="color:#4b5563;font-size:16px;margin-top:25px;margin-bottom:12px;font-weight:600">d) Limpieza de Datos Recomendada</h4>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Corregir nombres de columnas max. wv a max_wv y max. PAR a max_PAR para evitar problemas futuros en análisis.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Mantener valores outliers en variables ambientales clave, ya que representan eventos reales importantes; considerar transformaciones logarítmicas o winsorización para modelado robusto.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">No es necesario imputación por ausencia de valores faltantes.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Convertir columna "raining" a tipo categórico binario para análisis y modelado.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Revisar formato y tipos de dato para fecha (date), asegurando datetime para análisis temporal.</li>
+                    </ul>
+                </p>
+
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <h4 style="color:#4b5563;font-size:16px;margin-top:25px;margin-bottom:12px;font-weight:600">e) Feature Engineering</h4>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Crear variables temporales derivadas a partir de "date": hora, día, mes, estacionalidad, para capturar efectos temporales.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Calcular índices bioclimáticos combinando temperatura y humedad (ej. índice de estrés hídrico, sensación térmica).</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Transformaciones logarítmicas en variables con alta asimetría como rain, max_wv, SWDR, PAR para estabilizar varianza.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Codificación one-hot o label encoding para la columna "raining" si se utiliza en modelos supervisados.</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Escalado estándar (z-score) o Min-Max para variables numéricas continuas antes de modelos sensibles a escala (SVM, redes neuronales).</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Posible creación de interacción entre velocidad del viento y dirección (wv y wd) para capturar efectos compuestos.</li>
+                    </ul>
+                </p>
+
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <h4 style="color:#4b5563;font-size:16px;margin-top:25px;margin-bottom:12px;font-weight:600">f) Modelos Recomendados</h4>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Tipo de problema: Según variables disponibles y nombre "raining", parece adecuado un problema de clasificación binaria para predecir lluvia (raining).</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Modelos sugeridos:</li>
+                    </ul>
+                    <br>
+                    - Clasificación: Random Forest, XGBoost por su manejo robusto de variables numéricas y outliers.<br>
+                    - Modelos basados en redes neuronales para patrones temporales (LSTM, GRU) si se aprovecha la dimensión temporal.<br>
+                    - Modelos estadísticos clásicos (Regresión logística) para baseline.<br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Balance de clases: Moderadamente desequilibrado, aplicar técnicas de balanceo si se requiere (SMOTE, undersampling).</li>
+                    </ul>
+                    <br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Pipeline recomendado:</li>
+                    </ul>
+                    <br>
+                    - Limpieza y corrección de nombres<br>
+                    - Feature engineering temporal y transformaciones<br>
+                    - Escalado para modelos sensibles<br>
+                    - Codificación categórica de raining<br>
+                    <ul style="margin:15px 0;padding-left:25px;list-style-type:disc">
+                        <li style="margin:8px 0;line-height:1.6">Métricas de evaluación: Accuracy, F1-score, AUC-ROC para clasificación; precisión en predicción de eventos raros (lluvia) a evaluar con Recall y Precision.</li>
+                    </ul>
+                </p>
+                
+                <p style="margin:12px 0;line-height:1.7;color:#374151">
+                    Este informe brinda un esquema técnico y detallado optimizado para análisis predictivo y explotación robusta del dataset completo.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Separador visual -->
+        <div style="height:3px;background:linear-gradient(to right,#667eea,#764ba2);margin:0 30px"></div>
+        
+        <!-- Footer -->
+        <div style="padding:30px;text-align:center;background-color:#f9fafb">
+            <p style="margin:0;color:#6b7280;font-size:14px;font-style:italic">
+                ✨ Generado automáticamente por <strong style="color:#667eea">Dataset Agent</strong>
+            </p>
+            <p style="margin:10px 0 0 0;color:#9ca3af;font-size:12px">
+                Análisis basado en el dataset completo
+            </p>
+        </div>
+        
+    </div>
+    
+    <!-- Espaciado inferior -->
+    <div style="height:40px"></div>
+    
+</body>
+</html>

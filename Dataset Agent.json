@@ -1,0 +1,651 @@
+{
+  "name": "Dataset Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analiza el siguiente dataset según las instrucciones del System Message.\n\n**Headers del dataset:**\n{{ $json.headers }}\n\n**Total de filas en el dataset completo:**\n{{ $json.totalRows }}\n\n**Análisis completo del dataset:**\n{{ $json.analysis }}\n\n**IMPORTANTE:** Tienes acceso al análisis COMPLETO del dataset (todas las filas).\n\nGenera un informe completo de análisis y recomendaciones. Evita dar explicaciones acerca del proceso, una vez que tengas el resultado genéralo.",
+        "options": {
+          "systemMessage": "Eres un científico de datos experto especializado en análisis exploratorio de datos (EDA) y consultoría en machine learning.\n\n**FLUJO DE TRABAJO OBLIGATORIO:**\n\n1. **PRIMERO:** Llama INMEDIATAMENTE a la herramienta \"Summary\" para obtener el análisis completo del dataset (todas las filas, no solo una muestra).\n\n2. **LUEGO:** Basándote en ese análisis completo, genera un informe que incluya:\n\n   a) **Descripción de Variables:**\n      - Tipo de dato apropiado para cada columna\n      - Descripción detallada de qué representa cada variable\n      - Rango de valores y distribución\n\n   b) **Análisis Estadístico:**\n      - Resumen de estadísticas descriptivas (usa los datos de Summary)\n      - Interpretación de medidas de tendencia central y dispersión\n      - Identificación de variables con alta/baja variabilidad\n\n   c) **Calidad de Datos:**\n      - Valores faltantes: cantidad, porcentaje y patrón por columna\n      - Valores atípicos (outliers): columnas afectadas y severidad\n      - Filas duplicadas si las hay\n      - Inconsistencias detectadas en nombres de variables\n      - Problemas potenciales de calidad\n\n   d) **Limpieza de Datos Recomendada:**\n      - Estrategias para manejar valores faltantes (imputación, eliminación, etc.)\n      - Tratamiento de outliers (conservar, transformar, eliminar)\n      - Correcciones necesarias en nombres de variables\n      - Transformaciones de tipos de datos necesarias\n\n   e) **Feature Engineering:**\n      - Nuevas variables derivadas recomendadas\n      - Transformaciones matemáticas sugeridas (log, sqrt, polynomial, etc.)\n      - Interacciones entre variables relevantes\n      - Encoding necesario para variables categóricas\n      - Escalado/normalización recomendado\n\n   f) **IMPORTANTE - Modelos Recomendados:**\n      - Tipo de problema (clasificación, regresión, clustering, etc.)\n      - Modelos de ML/DL específicos sugeridos con justificación\n      - Consideraciones sobre el balance de clases (si aplica)\n      - Pipeline de preprocesamiento específico para cada modelo\n      - Métricas de evaluación apropiadas\n\n**IMPORTANTE:**\n- Todas tus recomendaciones deben basarse en el análisis COMPLETO del dataset (obtenido de Summary)\n- Sé específico y técnico\n- Justifica cada recomendación con datos concretos\n- NO inventes estadísticas, usa SOLO las provistas por la herramienta Summary\n- NO expliques el proceso de análisis, presenta directamente los resultados y recomendaciones\n- Estructura tu respuesta de forma clara con secciones bien definidas\n- NO uses caracteres especiales como \"|\", el texto debe ser legible y NO debe contener tablas"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1520,
+        -64
+      ],
+      "id": "4a12ba86-f2fa-44c4-b296-ebfd9b3186b7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "medium"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1520,
+        128
+      ],
+      "id": "8ee517c2-219d-4765-9e68-ffe509d4d4b4",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ZSQ8mDg5wljO9aja",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 1.  Pipeline de ingesta y procesamiento de datos",
+        "height": 480,
+        "width": 1280,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2896,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "bda57a52-3c62-4a57-a9d7-521462400c3d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Agente de IA",
+        "height": 400,
+        "width": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1584,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "4dd7be3e-6ff6-49a6-84b6-cb4276b44bbc",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2656,
+        -64
+      ],
+      "id": "e749835a-716a-4b0b-bfe4-74110174377d",
+      "name": "Descarga del Archivo",
+      "credentials": {
+        "googleApi": {
+          "id": "kQnMfDzbWOvKXBqA",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import pandas as pd\nimport numpy as np\nimport base64\nfrom io import StringIO\n\ndef get_dataframe_summary(df, name=\"DataFrame\"):\n    \"\"\"\n    Devuelve un sumario completo de un DataFrame en formato de diccionario estructurado.\n    \"\"\"\n    \n    summary = {}\n    \n    # Información básica\n    summary['basic_information'] = {\n        'name': name,\n        'shape': {\n            'rows': int(df.shape[0]),\n            'columns': int(df.shape[1])\n        },\n        'memory_usage_mb': float(df.memory_usage(deep=True).sum() / 1024**2),\n        'duplicate_rows': {\n            'count': int(df.duplicated().sum()),\n            'percentage': float(df.duplicated().sum() / len(df) * 100) if len(df) > 0 else 0\n        }\n    }\n    \n    # Tipos de datos\n    dtype_counts = df.dtypes.value_counts()\n    summary['data_types'] = {\n        'counts': {str(dtype): int(count) for dtype, count in dtype_counts.items()},\n        'column_list': df.columns.tolist()\n    }\n    \n    # Valores faltantes\n    missing = df.isnull().sum()\n    missing_pct = (missing / len(df) * 100).round(2) if len(df) > 0 else missing * 0\n    \n    summary['missing_values'] = {\n        'total': int(missing.sum()),\n        'has_missing': bool(missing.sum() > 0),\n        'by_column': {}\n    }\n    \n    for col in missing[missing > 0].index:\n        summary['missing_values']['by_column'][col] = {\n            'count': int(missing[col]),\n            'percentage': float(missing_pct[col])\n        }\n    \n    # Detección de outliers\n    numeric_cols = df.select_dtypes(include=[np.number]).columns\n    summary['outliers'] = {\n        'total_columns_with_outliers': 0,\n        'by_column': {}\n    }\n    \n    if len(numeric_cols) > 0:\n        for col in numeric_cols:\n            Q1 = df[col].quantile(0.25)\n            Q3 = df[col].quantile(0.75)\n            IQR = Q3 - Q1\n            lower_bound = Q1 - 1.5 * IQR\n            upper_bound = Q3 + 1.5 * IQR\n            \n            outliers = df[(df[col] < lower_bound) | (df[col] > upper_bound)][col]\n            n_outliers = len(outliers)\n            pct_outliers = (n_outliers / len(df) * 100) if len(df) > 0 else 0\n            \n            if n_outliers > 0:\n                summary['outliers']['by_column'][col] = {\n                    'count': int(n_outliers),\n                    'percentage': float(pct_outliers),\n                    'bounds': {\n                        'lower': float(lower_bound),\n                        'upper': float(upper_bound)\n                    },\n                    'outlier_range': {\n                        'min': float(outliers.min()),\n                        'max': float(outliers.max())\n                    }\n                }\n                summary['outliers']['total_columns_with_outliers'] += 1\n    \n    # Primeras 5 filas\n    summary['first_rows'] = df.head().to_dict(orient='records')\n    \n    # Últimas 5 filas\n    summary['last_rows'] = df.tail().to_dict(orient='records')\n    \n    # Resumen estadístico numérico\n    summary['numerical_statistics'] = {}\n    if len(numeric_cols) > 0:\n        desc = df[numeric_cols].describe()\n        for col in numeric_cols:\n            summary['numerical_statistics'][col] = {\n                'count': int(desc[col]['count']),\n                'mean': float(desc[col]['mean']),\n                'std': float(desc[col]['std']),\n                'min': float(desc[col]['min']),\n                'q25': float(desc[col]['25%']),\n                'median': float(desc[col]['50%']),\n                'q75': float(desc[col]['75%']),\n                'max': float(desc[col]['max'])\n            }\n    \n    # Resumen categórico\n    categorical_cols = df.select_dtypes(include=['object', 'category']).columns\n    summary['categorical_statistics'] = {}\n    \n    for col in categorical_cols:\n        n_unique = df[col].nunique()\n        value_counts = df[col].value_counts()\n        \n        col_summary = {\n            'unique_values': int(n_unique),\n            'distribution': {}\n        }\n        \n        # Si tiene <= 10 valores únicos, incluir todos\n        # Si tiene más, incluir solo top 5\n        limit = None if n_unique <= 10 else 5\n        top_values = value_counts if limit is None else value_counts.head(limit)\n        \n        for val, count in top_values.items():\n            col_summary['distribution'][str(val)] = {\n                'count': int(count),\n                'percentage': float(count / len(df) * 100) if len(df) > 0 else 0\n            }\n        \n        summary['categorical_statistics'][col] = col_summary\n    \n    # Información detallada por columna\n    summary['column_details'] = {}\n    for col in df.columns:\n        col_info = {\n            'dtype': str(df[col].dtype),\n            'non_null_count': int(df[col].count()),\n            'null_count': int(df[col].isnull().sum()),\n            'null_percentage': float(df[col].isnull().sum() / len(df) * 100) if len(df) > 0 else 0\n        }\n        \n        if pd.api.types.is_numeric_dtype(df[col]):\n            col_info['value_range'] = {\n                'min': float(df[col].min()) if df[col].notna().any() else None,\n                'max': float(df[col].max()) if df[col].notna().any() else None\n            }\n        \n        if df[col].dtype == 'object' or pd.api.types.is_categorical_dtype(df[col]):\n            col_info['unique_count'] = int(df[col].nunique())\n        \n        summary['column_details'][col] = col_info\n    \n    return summary\n\n\n# ============================================\n# LECTURA DIRECTA DEL CSV DESDE GOOGLE DRIVE\n# ============================================\n\n# Obtener el CSV desde el nodo \"If\" (que viene de Google Drive)\nbinary_data = items[0]['binary']['data']\ncsv_bytes = base64.b64decode(binary_data['data'])\ncsv_content = csv_bytes.decode('utf-8')\n\n# Leer el CSV directamente con pandas (infiere tipos automáticamente)\ndf = pd.read_csv(StringIO(csv_content))\n\n# Obtener headers\nheaders = df.columns.tolist()\n\n# Convertir DataFrame a lista de diccionarios (formato JSON)\ndata = df.to_dict(orient='records')\n\n# Generar el sumario completo estructurado\nfull_summary = get_dataframe_summary(df, name=\"Dataset\")\n\n# Retornar para el agente (MISMO FORMATO QUE ANTES - NO CAMBIA NADA)\nreturn [\n    {\n        'json': {\n            'headers': headers,\n            'data': data,\n            'totalRows': len(df),\n            'analysis': full_summary\n        }\n    }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1776,
+        -64
+      ],
+      "id": "6b69224e-2653-4780-88f8-2a3e4f952e99",
+      "name": "Sumario del Dataset"
+    },
+    {
+      "parameters": {
+        "jsCode": "const analysis = $('AI Agent').item.json.output;\nconst fileName = $('Descarga del Archivo').item.json.name;\nconst totalRows = $('Sumario del Dataset').item.json.totalRows;\nconst date = new Date().toLocaleDateString('es-ES');\n\n// Dividir el análisis en líneas\nconst lines = analysis.split('\\n');\n\n// Construir el contenido completo\nlet fullText = '';\n\n// Título principal\nfullText += `ANÁLISIS DE DATASET\\n`;\nfullText += `${'='.repeat(50)}\\n\\n`;\n\n// Información general\nfullText += `INFORMACIÓN GENERAL\\n`;\nfullText += `${'-'.repeat(50)}\\n`;\nfullText += `Archivo: ${fileName}\\n`;\nfullText += `Total de filas: ${totalRows}\\n`;\nfullText += `Fecha de análisis: ${date}\\n\\n`;\n\n// Análisis completo\nfullText += `ANÁLISIS COMPLETO\\n`;\nfullText += `${'-'.repeat(50)}\\n\\n`;\nfullText += analysis;\n\nfullText += `\\n\\n${'='.repeat(50)}\\n`;\nfullText += `Generado automáticamente por Dataset Agent\\n`;\n\nreturn [{\n  json: {\n    content: fullText,\n    fileName: fileName\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        112
+      ],
+      "id": "33aa3c96-e587-4a71-a629-222a2bb48eaa",
+      "name": "Formatear Texto"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Resultados",
+        "height": 592,
+        "width": 720,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "be5ed19e-b35a-488f-95c7-ce7eeb5c743b",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "serviceAccount",
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "",
+          "mode": "id"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2848,
+        -64
+      ],
+      "id": "be68498c-8cce-48af-8b7d-fc65cc888b89",
+      "name": "Cuando se carga un nuevo archivo",
+      "credentials": {
+        "googleApi": {
+          "id": "kQnMfDzbWOvKXBqA",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "=",
+        "title": "={{ $('Descarga del Archivo').item.json.name }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        112
+      ],
+      "id": "669f5e65-126a-4ff0-88ff-f903c504c084",
+      "name": "Crear Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DFS4OpF9UTNvtkBl",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Formatear Texto').item.json.content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -656,
+        112
+      ],
+      "id": "64828a07-8005-4a7d-8f9a-0ae92182e501",
+      "name": "Insertar análisis en Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "DFS4OpF9UTNvtkBl",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const analysis = $('AI Agent').item.json.output;\nconst fileName = $('Descarga del Archivo').item.json.name;\nconst totalRows = $('Sumario del Dataset').item.json.totalRows;\n\n// Función para convertir markdown básico a HTML\nfunction markdownToHTML(text) {\n  return text\n    // Títulos con ###\n    .replace(/### (.*?)$/gm, '<h3 style=\"color: #2563eb; font-size: 18px; margin-top: 30px; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px;\">$1</h3>')\n    // Títulos con ##\n    .replace(/## (.*?)$/gm, '<h2 style=\"color: #1e40af; font-size: 22px; margin-top: 35px; margin-bottom: 18px; border-bottom: 3px solid #3b82f6; padding-bottom: 10px;\">$1</h2>')\n    // Negritas **texto**\n    .replace(/\\*\\*(.*?)\\*\\*/g, '<strong style=\"color: #1f2937; font-weight: 600;\">$1</strong>')\n    // Listas con -\n    .replace(/^- (.*?)$/gm, '<li style=\"margin: 8px 0; line-height: 1.6;\">$1</li>')\n    // Listas con números\n    .replace(/^(\\d+)\\. (.*?)$/gm, '<li style=\"margin: 8px 0; line-height: 1.6;\">$2</li>')\n    // Secciones con letras a), b), etc.\n    .replace(/^([a-z])\\) (.*?)$/gm, '<h4 style=\"color: #4b5563; font-size: 16px; margin-top: 25px; margin-bottom: 12px; font-weight: 600;\">$1) $2</h4>')\n    // Párrafos (doble salto de línea)\n    .replace(/\\n\\n/g, '</p><p style=\"margin: 12px 0; line-height: 1.7; color: #374151;\">')\n    // Saltos de línea simples\n    .replace(/\\n/g, '<br>');\n}\n\n// Procesar el análisis\nlet processedAnalysis = markdownToHTML(analysis);\n\n// Envolver listas en <ul>\nprocessedAnalysis = processedAnalysis.replace(/(<li.*?<\\/li>)+/g, '<ul style=\"margin: 15px 0; padding-left: 25px; list-style-type: disc;\">$&</ul>');\n\nconst html = `\n<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Análisis de Dataset</title>\n</head>\n<body style=\"margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\">\n    \n    <!-- Container principal -->\n    <div style=\"max-width: 700px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);\">\n        \n        <!-- Header con gradiente -->\n        <div style=\"background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;\">\n            <h1 style=\"margin: 0; color: #ffffff; font-size: 32px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n                📊 Análisis de Dataset\n            </h1>\n        </div>\n        \n        <!-- Información general -->\n        <div style=\"background: linear-gradient(to right, #eff6ff, #f0f9ff); padding: 25px 30px; border-left: 5px solid #3b82f6;\">\n            <h2 style=\"margin: 0 0 20px 0; color: #1e40af; font-size: 20px; font-weight: 600;\">\n                📋 Información General\n            </h2>\n            <table style=\"width: 100%; border-collapse: collapse;\">\n                <tr>\n                    <td style=\"padding: 8px 0; color: #6b7280; font-weight: 600; width: 40%;\">📄 Archivo:</td>\n                    <td style=\"padding: 8px 0; color: #1f2937;\">${fileName}</td>\n                </tr>\n                <tr>\n                    <td style=\"padding: 8px 0; color: #6b7280; font-weight: 600;\">📊 Total de filas:</td>\n                    <td style=\"padding: 8px 0; color: #1f2937;\">${totalRows.toLocaleString()}</td>\n                </tr>\n            </table>\n        </div>\n        \n        <!-- Contenido del análisis -->\n        <div style=\"padding: 35px 30px;\">\n            <div style=\"background: #f9fafb; padding: 25px; border-radius: 8px; border-left: 4px solid #667eea;\">\n                <p style=\"margin: 0 0 15px 0; line-height: 1.7; color: #374151;\">\n                    ${processedAnalysis}\n                </p>\n            </div>\n        </div>\n        \n        <!-- Separador visual -->\n        <div style=\"height: 3px; background: linear-gradient(to right, #667eea, #764ba2); margin: 0 30px;\"></div>\n        \n        <!-- Footer -->\n        <div style=\"padding: 30px; text-align: center; background-color: #f9fafb;\">\n            <p style=\"margin: 0; color: #6b7280; font-size: 14px; font-style: italic;\">\n                ✨ Generado automáticamente por <strong style=\"color: #667eea;\">Dataset Agent</strong>\n            </p>\n            <p style=\"margin: 10px 0 0 0; color: #9ca3af; font-size: 12px;\">\n                Análisis basado en el dataset completo\n            </p>\n        </div>\n        \n    </div>\n    \n    <!-- Espaciado inferior -->\n    <div style=\"height: 40px;\"></div>\n    \n</body>\n</html>\n`;\n\nreturn [{\n  json: {\n    html: html,\n    subject: `📊 Análisis de Dataset: ${fileName}`,\n    fileName: fileName\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        -64
+      ],
+      "id": "1de54d87-b551-4da7-870d-fa165e2c089d",
+      "name": "Preparar HTML"
+    },
+    {
+      "parameters": {
+        "subject": "=Análisis del Dataset Agent, {{ $now }}",
+        "message": "={{ $json.html }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -848,
+        -64
+      ],
+      "id": "ceba6a32-a7f4-4ff1-9df3-8ff8faf95eec",
+      "name": "Enviar por correo",
+      "webhookId": "d2a92cee-e53c-4286-8139-8d1f64fa97c1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VDKhY4CqQ2Xbx5bY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "subject": "={{ $workflow.name }} - Problema al ejecutar el flujo",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 480px; padding: 20px; border: 1px solid #e2e2e2; border-radius: 8px; background: #fafafa;\">\n  <h2 style=\"color: #d9534f; margin-top: 0;\">⚠ Archivo no soportado</h2>\n  <p style=\"font-size: 14px; color: #333;\">\n    Se ha detectado la carga de un archivo cuyo formato <strong>no es compatible</strong> con el proceso automático de análisis.\n  </p>\n\n  <p style=\"font-size: 14px; color: #555;\">\n    <strong>Detalles del archivo:</strong>\n  </p>\n\n  <ul style=\"font-size: 14px; color: #444; padding-left: 20px;\">\n    <li><strong>Nombre:</strong> {{ $json.name }}</li>\n    <li><strong>Tipo MIME:</strong> {{ $json.mimeType }}</li>\n    <li><strong>Fecha:</strong> {{ $now.toLocaleString(\"es-AR\") }}</li>\n  </ul>\n\n  <p style=\"font-size: 14px; color: #333;\">\n    Por favor, asegúrate de subir únicamente archivos en formato:\n  </p>\n\n  <ul style=\"font-size: 14px; color: #444; padding-left: 20px;\">\n    <li>📄 <strong>CSV</strong></li>\n    <li>📝 <strong>Google Sheets</strong></li>\n  </ul>\n\n  <p style=\"font-size: 13px; color: #777; margin-top: 20px;\">\n    Este mensaje fue generado automáticamente por el sistema de análisis de datasets.\n  </p>\n</div>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -2128,
+        96
+      ],
+      "id": "80918655-518d-4560-8007-4a1fb3eac64d",
+      "name": "Enviar por correo - Error",
+      "webhookId": "969e7283-666a-4cfe-83a3-d23eda61e242",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "VDKhY4CqQ2Xbx5bY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2224,
+        -176
+      ],
+      "id": "56c81590-9274-4fb7-87b9-aba6dd31c57e",
+      "name": "Extraer Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VP5OjPY0mubNozHT",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -2016,
+        -176
+      ],
+      "id": "7e35b14b-004d-46eb-9e1e-2f54486428cb",
+      "name": "Convertir a CSV"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Descarga del Archivo').item.json.mimeType }}",
+                    "rightValue": "application/vnd.google-apps.spreadsheet",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "45dddcb5-e7ee-47d3-9e19-7bd5fda5a50d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Sheets"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ab006622-b67d-40fb-9252-3adaf7c31079",
+                    "leftValue": "={{ $('Descarga del Archivo').item.json.mimeType }}",
+                    "rightValue": "text/csv",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "CSV"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -2464,
+        -80
+      ],
+      "id": "173f960c-ffb9-4e74-a80f-1702df14faf4",
+      "name": "Validar archivo"
+    },
+    {
+      "parameters": {
+        "resource": "execution",
+        "operation": "get",
+        "executionId": "={{ $execution.id }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        -256
+      ],
+      "id": "87391b1c-2dd0-4d54-93e3-8d9016b8c617",
+      "name": "Datos de ejecución",
+      "credentials": {
+        "n8nApi": {
+          "id": "2O0VZod7GEObd9o2",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -848,
+        -256
+      ],
+      "id": "351bdbb6-cc75-4f45-aba0-9ee6d3f9e3d5",
+      "name": "Logs",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VP5OjPY0mubNozHT",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ⚠️ CONFIGURACIÓN REQUERIDA\n\n### 1. Credenciales:\n   • Google Service Account\n   • Google Sheets OAuth2\n   • Google Docs OAuth2\n   • Gmail OAuth2\n   • OpenAI API\n   • n8n API\n\n### 2. IDs de Google Drive (crítico):\n   • Trigger \"Cuando se carga...\": ID carpeta \"Datasets de ejemplo\"\n   • \"Crear Docs\": ID carpeta \"Docs\"\n   • \"Logs\": ID del Google Sheet de logs\n\n### 2. CORREOS (crítico):\n   • Enviar por correo: cambiar sendTo\n   • Enviar por correo - Error: cambiar sendTo\n   Actual: ***(vacío)***\n   Cambiar por: TU_CORREO@ejemplo.com\n\nVer README.pdf para instrucciones completas",
+        "height": 512,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2896,
+        -736
+      ],
+      "typeVersion": 1,
+      "id": "6a860e49-faac-4dcb-9e77-90c26749dcba",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Formatear Texto",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Preparar HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Datos de ejecución",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descarga del Archivo": {
+      "main": [
+        [
+          {
+            "node": "Validar archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sumario del Dataset": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Texto": {
+      "main": [
+        [
+          {
+            "node": "Crear Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cuando se carga un nuevo archivo": {
+      "main": [
+        [
+          {
+            "node": "Descarga del Archivo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Docs": {
+      "main": [
+        [
+          {
+            "node": "Insertar análisis en Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar HTML": {
+      "main": [
+        [
+          {
+            "node": "Enviar por correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Convertir a CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir a CSV": {
+      "main": [
+        [
+          {
+            "node": "Sumario del Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar archivo": {
+      "main": [
+        [
+          {
+            "node": "Extraer Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sumario del Dataset",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar por correo - Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Datos de ejecución": {
+      "main": [
+        [
+          {
+            "node": "Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "errorWorkflow": "0WnXjWcpDOjbqoQd"
+  },
+  "versionId": "055f6ec0-97bd-4d07-acd3-4a4d7b10dab3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23bb2f701a85ec0446f2c3681339aa9115277ead7f821d41410a2ea2106dda50"
+  },
+  "id": "0WnXjWcpDOjbqoQd",
+  "tags": []
+}
