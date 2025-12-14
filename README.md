@@ -131,19 +131,6 @@ Este flujo requiere configurar las siguientes credenciales en su instancia de n8
    - Valor actual: np-1999@hotmail.com
    - **Acción:** Cambiar por su correo de preferencia
 
-## ✅ Checklist de Configuración
-
-Antes de ejecutar el flujo, verificar:
-
-✅ Google Service Account configurada
-✅ Google Sheets OAuth2 configurada
-✅ Google Docs OAuth2 configurada
-✅ Gmail OAuth2 configurada
-✅ OpenAI API configurada
-✅ n8n API configurada
-✅ Correo actualizado en "Enviar por correo"
-✅ Correo actualizado en "Enviar por correo - Error"
-
 ## 📧 Vista Previa del Output
 
 El flujo genera un correo HTML profesional con análisis detallado.
