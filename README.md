@@ -23,8 +23,6 @@ Flujo automatizado de n8n que analiza datasets (CSV o Google Sheets) utilizando 
 - **Docs**: Carpeta donde se guardan los Google Docs con el análisis completo generado por el agente de IA.
 - **Logs**: Contiene un Google Sheet que registra todas las ejecuciones del flujo (ID, estado, fecha de inicio/fin, etc.).
 
----
-
 ## 🗂️ Configuración de Carpetas de Google Drive
 
 Este proyecto incluye la estructura completa de carpetas con archivos de ejemplo. Para que el flujo funcione correctamente, el usuario debe subirlas a su Google Drive y actualizar los IDs en el workflow.
@@ -85,8 +83,6 @@ Una vez importado `Dataset Agent.json` en n8n, debes actualizar los siguientes n
 | Crear Docs                       | Folder Name or ID | ID de "Docs/"                |
 | Logs                             | Document ID       | ID del Google Sheet de logs  |
 
----
-
 ## ⚙️ Configuración Requerida
 
 ### 1. Credenciales de n8n
@@ -98,21 +94,15 @@ Este flujo requiere configurar las siguientes credenciales en su instancia de n8
 - "Cuando se carga un nuevo archivo" (Google Drive Trigger)
 - "Descarga del Archivo" (Google Drive)
 
----
-
 #### 🔹 Google Sheets OAuth2
 **Nodos que la usan:**
 - "Extraer Google Sheets"
 - "Logs"
 
----
-
 #### 🔹 Google Docs OAuth2
 **Nodos que la usan:**
 - "Crear Docs"
 - "Insertar análisis en Docs"
-
----
 
 #### 🔹 Gmail OAuth2
 **Nodos que la usan:**
@@ -121,15 +111,11 @@ Este flujo requiere configurar las siguientes credenciales en su instancia de n8
 
 ⚠️ **ACCIÓN CRÍTICA:** Cambiar el campo `sendTo` en ambos nodos con su dirección de correo de preferencia.
 
----
-
 #### 🔹 OpenAI API
 **Nodo que la usa:**
 - "OpenAI Chat Model"
 
 **Modelo usado:** `gpt-4.1-mini`
-
----
 
 ### 2. ⚠️ CORREOS - CONFIGURACIÓN OBLIGATORIA
 
@@ -145,8 +131,6 @@ Este flujo requiere configurar las siguientes credenciales en su instancia de n8
    - Valor actual: np-1999@hotmail.com
    - **Acción:** Cambiar por su correo de preferencia
 
----
-
 ## ✅ Checklist de Configuración
 
 Antes de ejecutar el flujo, verificar:
@@ -159,8 +143,6 @@ Antes de ejecutar el flujo, verificar:
 ✅ n8n API configurada
 ✅ Correo actualizado en "Enviar por correo"
 ✅ Correo actualizado en "Enviar por correo - Error"
-
----
 
 ## 📧 Vista Previa del Output
 
@@ -175,8 +157,6 @@ El flujo genera un correo HTML profesional con análisis detallado.
 - 🔍 Recomendaciones de limpieza y feature engineering
 - 🤖 Modelos de ML sugeridos
 - ✨ Footer con branding del proyecto
-
----
 
 ## 📝 Notas Adicionales
 
